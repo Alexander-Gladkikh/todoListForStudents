@@ -25,6 +25,7 @@ export function TodoList(props: TodoListPropsType) {
                 <li><input type="checkbox" checked={props.tasks[2].isDone}/> <span>{props.tasks[2].title}</span></li>
 
             </ul>
+            <p>Lorem ipsum dolor sit amet.</p>
             <div>
                 <button>All</button>
                 <button>Active</button>
