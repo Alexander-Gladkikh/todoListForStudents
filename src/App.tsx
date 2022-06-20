@@ -1,25 +1,60 @@
-import React from 'react';
+import React, {useState} from 'react';
 import './App.css';
-import {TodoList} from "./components/TodoList";
+import {Todolist} from './Todolist';
+import {v1} from "uuid";
+
+
+export type FilterValuesType = "all" | "active" | "completed";
 
 function App() {
 
-    let tasks1 = [
-        {id: 1, title: 'HTML+CSS', isDone: true},
-        {id: 2, title: 'JS', isDone: true},
-        {id: 3, title: 'React', isDone: false}
-    ]
+    let [tasks, setTasks] = useState([
+        {id: v1(), title: "HTML&CSS", isDone: true},
+        {id: v1(), title: "JS", isDone: true},
+        {id: v1(), title: "ReactJS", isDone: false},
+        {id: v1(), title: "Rest API", isDone: false},
+        {id: v1(), title: "GraphQL", isDone: false},
+    ]);
 
-    let tasks2 = [
-        {id: 1, title: 'Terminator', isDone: true},
-        {id: 2, title: 'XXX', isDone: true},
-        {id: 3, title: 'Jentelmens', isDone: false}
-    ]
+    const changeCheckBox = (id: string, value: boolean) => {
+        setTasks(tasks.map(el => id === el.id ? {...el, isDone: value} : el))
+    }
+
+    const addTask = (newTitle: string) => {
+        const newTasks = {id: v1(), title: newTitle, isDone: false}
+        setTasks([newTasks, ...tasks])
+    }
+
+    function removeTask(id: string) {
+        let filteredTasks = tasks.filter(t => t.id != id);
+        setTasks(filteredTasks);
+    }
+
+    let [filter, setFilter] = useState<FilterValuesType>("all");
+
+    let tasksForTodolist = tasks;
+
+    if (filter === "active") {
+        tasksForTodolist = tasks.filter(t => t.isDone === false);
+    }
+    if (filter === "completed") {
+        tasksForTodolist = tasks.filter(t => t.isDone === true);
+    }
+
+    function changeFilter(value: FilterValuesType) {
+        setFilter(value);
+    }
 
     return (
         <div className="App">
-            <TodoList title='What to learn' tasks ={tasks1}/>
-            <TodoList title='Movie' tasks ={tasks2}/>
+            <Todolist
+                changeCheckBox={changeCheckBox}
+                title="What to learn"
+                tasks={tasksForTodolist}
+                removeTask={removeTask}
+                changeFilter={changeFilter}
+                addTask={addTask}
+            />
         </div>
     );
 }
