@@ -4,8 +4,6 @@ import './App.css'
 import {AddItemForm} from "./AddItemForm";
 import {EditableSpan} from "./EditableSpan";
 
-
-
 export type TaskType = {
     id: string
     title: string

@@ -11,7 +11,7 @@ export type TodoListType = {
     title: string
     filter: FilterType
 }
-type TasksStateType = {
+export type TasksStateType = {
     [key: string]: Array<TaskType>
 }
 
@@ -95,8 +95,6 @@ export function App() {
         setTasksObj({...tasksObj})
     }
 
-
-
     function addTodoList (title: string) {
         let todoList:TodoListType = {
             id: v1(),
@@ -109,6 +107,7 @@ export function App() {
         [todoList.id]: []
         })
     }
+
 
     return (
         <div className='App'>
