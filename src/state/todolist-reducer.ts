@@ -31,11 +31,11 @@ export const todolistReducer = (state: Array<TodoListType>, action: ActionsType)
             return state.filter(el => el.id !== action.id)
 
         case 'ADD-TODOLIST' : {
-            return [...state, {
+            return [{
                 id: action.todolistId,
                 title: action.title,
                 filter: "all"
-            }]
+            }, ...state]
         }
 
         case 'CHANGE-TODOLIST-TITLE': {
