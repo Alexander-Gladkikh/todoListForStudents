@@ -1,8 +1,8 @@
 import React, {ChangeEvent} from "react";
-import {FilterType} from "./App";
 import './App.css'
 import {AddItemForm} from "./AddItemForm";
 import {EditableSpan} from "./EditableSpan";
+import {FilterType} from "./AppWithRedux";
 
 export type TaskType = {
     id: string

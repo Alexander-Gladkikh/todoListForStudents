@@ -1,4 +1,4 @@
-import {FilterType, TodoListType} from "../App";
+import {FilterType, TodoListType} from "../AppWithRedux";
 import {v1} from "uuid";
 
 export type RemoveTodolistActionType = {
@@ -21,11 +21,17 @@ export type ChangeTodolistFilterActionType = {
     filter: FilterType
 }
 
+export let todoListId1 = v1();
+export let todoListId2 = v1();
+
 type ActionsType =  RemoveTodolistActionType | AddTodolistActionType | ChangeTodolistTitleActionType | ChangeTodolistFilterActionType
 
+const initialState: Array<TodoListType> = [
+    // {id: todoListId1, title: 'What to learn', filter: 'all'},
+    // {id: todoListId2, title: 'What to buy', filter: 'all'}
+]
 
-
-export const todolistReducer = (state: Array<TodoListType>, action: ActionsType): Array<TodoListType> => {
+export const todolistReducer = (state: Array<TodoListType> = initialState, action: ActionsType): Array<TodoListType> => {
     switch (action.type) {
         case 'REMOVE-TODOLIST':
             return state.filter(el => el.id !== action.id)
@@ -55,7 +61,7 @@ export const todolistReducer = (state: Array<TodoListType>, action: ActionsType)
         }
 
         default:
-            throw new Error("I don't understand this action type")
+            return state
     }
 }
 

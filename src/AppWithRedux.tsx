@@ -1,16 +1,16 @@
-import React, {useReducer, useState} from 'react';
+import React  from 'react';
 import './App.css';
 import {TaskType, TodoList} from "./TodoList";
-import {v1} from "uuid";
 import {AddItemForm} from "./AddItemForm";
 import {
     addTodolistAC,
     changeTodolistFilterAC,
     changeTodolistTitleAC,
     removeTodolistAC,
-    todolistReducer
 } from "./state/todolist-reducer";
-import {addTaskAC, changeTaskStatusAC, changeTaskTitleAC, removeTaskAC, tasksReducer} from "./state/tasks-reducer";
+import {addTaskAC, changeTaskStatusAC, changeTaskTitleAC, removeTaskAC} from "./state/tasks-reducer";
+import {useDispatch, useSelector} from "react-redux";
+import {AppRootSate} from "./state/store";
 
 export type FilterType = 'all' | 'active' | 'completed'
 
@@ -25,66 +25,43 @@ export type TasksStateType = {
 
 export function AppWithRedux() {
 
-    let todoListId1 = v1();
-    let todoListId2 = v1();
-
-    let [todoLists, dispatchToTodoListsReducer] = useReducer(todolistReducer,
-        [
-            {id: todoListId1, title: 'What to learn', filter: 'all'},
-            {id: todoListId2, title: 'What to buy', filter: 'all'}
-        ]
-    )
-
-    let [tasksObj, dispatchToTasksReducer] = useReducer(tasksReducer,
-        {
-            [todoListId1]: [
-                {id: v1(), title: 'HTML/CSS', isDone: true},
-                {id: v1(), title: 'JS', isDone: true},
-                {id: v1(), title: 'React', isDone: false},
-                {id: v1(), title: 'Redax', isDone: false}],
-            [todoListId2]: [
-                {id: v1(), title: 'Book', isDone: false},
-                {id: v1(), title: 'Milk', isDone: true},
-            ]
-        }
-    )
-
+    const dispatch = useDispatch()
+    const todoList = useSelector<AppRootSate, Array<TodoListType>>(state => state.todoLists)
+    const tasks = useSelector<AppRootSate, TasksStateType>(state => state.tasks)
 
     const removeTask = (id: string, todoListId: string) => {
-        dispatchToTasksReducer(removeTaskAC(id, todoListId));
+        dispatch(removeTaskAC(id, todoListId));
     }
 
     const addTask = (title: string, todoListId: string) => {
-        dispatchToTasksReducer(addTaskAC(title, todoListId));
+        dispatch(addTaskAC(title, todoListId));
     }
 
     const changeStatus = (id: string, isDone: boolean, todoListId: string) => {
-        dispatchToTasksReducer(changeTaskStatusAC(id, isDone, todoListId))
+        dispatch(changeTaskStatusAC(id, isDone, todoListId))
     }
 
     const changeTitle = (id: string, newTitle: string, todoListId: string) => {
-        dispatchToTasksReducer(changeTaskTitleAC(id, newTitle, todoListId))
+        dispatch(changeTaskTitleAC(id, newTitle, todoListId))
     }
 
     const changeFilter = (filter: FilterType, todoListId: string) => {
-        dispatchToTodoListsReducer(changeTodolistFilterAC(todoListId, filter))
+        dispatch(changeTodolistFilterAC(todoListId, filter))
     }
 
     const removeTodoList = (todoListId: string) => {
         const action = removeTodolistAC(todoListId)
-        dispatchToTasksReducer(action)
-        dispatchToTodoListsReducer(action)
+        dispatch(action)
     }
 
     const changeTodoListTitle = (id: string, newTitle: string) => {
-        dispatchToTodoListsReducer(changeTodolistTitleAC(id, newTitle))
+        dispatch(changeTodolistTitleAC(id, newTitle))
     }
 
 
     function addTodoList(title: string) {
         const action = addTodolistAC(title)
-        dispatchToTasksReducer(action)
-        dispatchToTodoListsReducer(action)
+        dispatch(action)
     }
 
 
@@ -92,8 +69,8 @@ export function AppWithRedux() {
         <div className='App'>
             <AddItemForm addItem={addTodoList}/>
             {
-                todoLists.map((tl) => {
-                    let tasksForTodolist = tasksObj[tl.id];
+                todoList.map((tl) => {
+                    let tasksForTodolist = tasks[tl.id];
                     if (tl.filter === 'active') {
                         tasksForTodolist = tasksForTodolist.filter((t) => !t.isDone)
                     }
